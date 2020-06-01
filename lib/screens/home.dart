@@ -1,5 +1,7 @@
+import 'package:appscanner/common/formatting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:device_apps/device_apps.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -7,26 +9,43 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  MediaQueryData _deviceData;
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
-    _deviceData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("App Scanner"),
         centerTitle: true,
+        backgroundColor: Colors.blueAccent,
       ),
       body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(child: Container(),),
-              Text("Click the scan button to find chinese apps on your phone."),
+              !_loading ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(child: Text("Scan Phone For Chinese Apps.")),
+              ) : loader,
               SizedBox(height: 20,),
-              Container(
+              !_loading ? Container(
                 height: 50.0,
                 child: RaisedButton(
-                  onPressed: () {},
+                  onPressed: () async{
+                    setState(() {
+                      _loading = true;
+                    });
+                    await DeviceApps.getInstalledApplications().then((apps) {
+                      if(apps != null){
+                        Navigator.of(context).pushReplacementNamed('installedApps', arguments: apps);
+                      }
+                      else{
+                        setState(() {
+                          _loading = false;
+                        });
+                      }
+                    });
+                  },
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                   padding: EdgeInsets.all(0.0),
                   child: Ink(
@@ -41,8 +60,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: _deviceData.size.height - 500,)
+              ) : Container(),
             ],
           ),
       ),

@@ -1,3 +1,4 @@
+import 'package:appscanner/common/installed_apps.dart';
 import 'package:appscanner/screens/home.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,9 @@ class _AppScannerState extends State<AppScanner> {
       title: "App Scanner",
       debugShowCheckedModeBanner: false,
       home: Home(),
+      routes: {
+        'installedApps' : (context) => InstalledApps(),
+      },
     );
   }
 }
