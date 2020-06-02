@@ -10,6 +10,59 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool _loading = false;
+  List<String> _knownApps = [
+    'tiktok',
+    'like',
+    'helo',
+    'shareit',
+    'ucbrowser',
+    'pubgmobile',
+    'pubgmobilelite',
+    'tiktpklite',
+    'cutcut',
+    'xender',
+    'vmate',
+    'beautyplus',
+    'clubfactory',
+    'allvideodownloader',
+    'vigovideo',
+    'applock',
+    'ucbrowsermini',
+    'vigolite',
+    'vmatestatus',
+    'udictionary',
+    'livu',
+    'togetu',
+    'battleofempires',
+    'uplive',
+    'liveme',
+    'riseofcivilizations',
+    'vigolive',
+    'kingofavalon',
+    'gunsofglory',
+    'zakzakpro',
+    'clashofkings',
+    'castlecash',
+    'camscanner',
+    'gameofsultans',
+    'nonolive',
+    'dating.com',
+    'webnovel',
+    'helloyo',
+    'legacyofdiscord',
+    'mafiacity',
+    'lastempire',
+    'artofconquest',
+    'flashkeyboard',
+    'turbovpn',
+    'bigolive',
+    'mobilelegendsbangbanga',
+    'newsdog',
+    'cheez',
+    'kwai',
+    'shein',
+    'romwe',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +88,10 @@ class _HomeState extends State<Home> {
                     setState(() {
                       _loading = true;
                     });
-                    await DeviceApps.getInstalledApplications().then((apps) {
+                    await DeviceApps.getInstalledApplications(onlyAppsWithLaunchIntent: true, includeAppIcons: true).then((apps) async{
                       if(apps != null){
-                        Navigator.of(context).pushReplacementNamed('installedApps', arguments: apps);
+                        Iterable<Application> chineseApps = apps.where((app) => _knownApps.contains(app.appName.toLowerCase().replaceAll(' ', '')));
+                        Navigator.of(context).pushReplacementNamed('installedApps', arguments: chineseApps.toList());
                       }
                       else{
                         setState(() {

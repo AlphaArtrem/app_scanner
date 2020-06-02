@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:device_apps/device_apps.dart';
 
 class InstalledApps extends StatefulWidget {
   @override
@@ -8,7 +7,7 @@ class InstalledApps extends StatefulWidget {
 }
 
 class _InstalledAppsState extends State<InstalledApps> {
-  List<Application> _apps;
+  List _apps;
   @override
   Widget build(BuildContext context) {
     _apps = ModalRoute.of(context).settings.arguments;
@@ -24,18 +23,23 @@ class _InstalledAppsState extends State<InstalledApps> {
         child: ListView.builder(
           itemCount: _apps.length,
           itemBuilder: (context, index){
-            return Container(
-              padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 5.0),
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey)),
-              ),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text('${_apps[index].appName}'),
-                  ),
-                  Icon(Icons.delete, color: Colors.blue,),
-                ],
+            return Card(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Image.memory(_apps[index].icon, scale: 8,)
+                    ),
+                    SizedBox(width: 20,),
+                    Expanded(
+                      flex: 9,
+                      child: Text('${_apps[index].appName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),),
+                    ),
+                    Icon(Icons.delete, color: Colors.deepPurpleAccent,),
+                  ],
+                ),
               ),
             );
           },
