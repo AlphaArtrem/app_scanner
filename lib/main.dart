@@ -1,4 +1,4 @@
-import 'file:///D:/Workspace/flutter/app_scanner/lib/screens/installed_apps.dart';
+import 'package:appscanner/common/installed_apps.dart';
 import 'package:appscanner/screens/home.dart';
 import 'package:flutter/material.dart';
 

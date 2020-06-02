@@ -1,5 +1,7 @@
+import 'package:android_intent/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InstalledApps extends StatefulWidget {
   @override
@@ -7,11 +9,11 @@ class InstalledApps extends StatefulWidget {
 }
 
 class _InstalledAppsState extends State<InstalledApps> {
+  static const platform = const MethodChannel('com.alphaartrem.appscanner/deleteApp');
   List _apps;
   @override
   Widget build(BuildContext context) {
     _apps = ModalRoute.of(context).settings.arguments;
-    print(_apps.length);
     return Scaffold(
       appBar: AppBar(
         title: Text("Unistall Apps"),
@@ -25,7 +27,7 @@ class _InstalledAppsState extends State<InstalledApps> {
           itemBuilder: (context, index){
             return Card(
               child: Container(
-                padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -37,7 +39,12 @@ class _InstalledAppsState extends State<InstalledApps> {
                       flex: 9,
                       child: Text('${_apps[index].appName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),),
                     ),
-                    Icon(Icons.delete, color: Colors.deepPurpleAccent,),
+                    IconButton(
+                      onPressed: () async{
+                        await _deleteApp(_apps[index].packageName);
+                      },
+                      icon : Icon(Icons.delete, color: Colors.deepPurpleAccent,),
+                    ),
                   ],
                 ),
               ),
@@ -46,5 +53,16 @@ class _InstalledAppsState extends State<InstalledApps> {
         ),
       ),
     );
+  }
+
+  Future<void> _deleteApp(String package) async {
+    dynamic result;
+    try {
+      result = await platform.invokeMethod('deleteApp', {'package' : package});
+      _apps.removeWhere((app) => app.packageName == package);
+      setState(() {});
+    } on PlatformException catch (e) {
+      result = "Error : '${e.message}'.";
+    }
   }
 }
