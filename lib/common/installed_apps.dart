@@ -1,4 +1,3 @@
-import 'package:android_intent/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,13 +55,12 @@ class _InstalledAppsState extends State<InstalledApps> {
   }
 
   Future<void> _deleteApp(String package) async {
-    dynamic result;
     try {
-      result = await platform.invokeMethod('deleteApp', {'package' : package});
+      await platform.invokeMethod('deleteApp', {'package' : package});
       _apps.removeWhere((app) => app.packageName == package);
       setState(() {});
     } on PlatformException catch (e) {
-      result = "Error : '${e.message}'.";
+      print("Error : ${e.message}.");
     }
   }
 }
