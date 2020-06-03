@@ -95,7 +95,7 @@ class _HomeState extends State<Home> {
                               appName.toLowerCase().startsWith(app.appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', ''))).toList();
                           return match.length > 0 ? true : false;
                         });
-                        Navigator.of(context).pushReplacementNamed('installedApps', arguments: chineseApps.toList());
+                        Navigator.of(context).pushReplacementNamed('installedApps', arguments: {'chineseApps' : chineseApps.toList(), 'knownApps' : _knownApps});
                       }
                       else{
                         setState(() {

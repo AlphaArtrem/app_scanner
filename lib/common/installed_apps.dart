@@ -1,3 +1,4 @@
+import 'package:android_intent/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +11,12 @@ class InstalledApps extends StatefulWidget {
 class _InstalledAppsState extends State<InstalledApps> {
   static const platform = const MethodChannel('com.alphaartrem.appscanner/deleteApp');
   List _apps;
+  Map _knownApps;
   @override
   Widget build(BuildContext context) {
-    _apps = ModalRoute.of(context).settings.arguments;
+    Map data = ModalRoute.of(context).settings.arguments;
+    _apps = data['chineseApps'];
+    _knownApps = data['knownApps'];
     return Scaffold(
       appBar: AppBar(
         title: Text("Unistall Apps"),
@@ -27,22 +31,59 @@ class _InstalledAppsState extends State<InstalledApps> {
             return Card(
               child: Container(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                child: Row(
+                child: Column(
                   children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Image.memory(_apps[index].icon, scale: 8,)
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.grey[500]))
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Image.memory(_apps[index].icon, scale: 8,)
+                          ),
+                          SizedBox(width: 20,),
+                          Expanded(
+                            flex: 9,
+                            child: Text('${_apps[index].appName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),),
+                          ),
+                          IconButton(
+                            onPressed: () async{
+                              await _deleteApp(_apps[index].packageName);
+                            },
+                            icon : Icon(Icons.delete, color: Colors.deepPurpleAccent,),
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 20,),
-                    Expanded(
-                      flex: 9,
-                      child: Text('${_apps[index].appName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),),
-                    ),
-                    IconButton(
-                      onPressed: () async{
-                        await _deleteApp(_apps[index].packageName);
-                      },
-                      icon : Icon(Icons.delete, color: Colors.deepPurpleAccent,),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            'Get',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 9,
+                          child: Text(
+                            '${_knownApps[_apps[index].appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', '')][0]}',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () async{
+                            AndroidIntent intent = AndroidIntent(
+                              action: 'action_view',
+                              data: _knownApps[_apps[index].appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', '')][1]
+                            );
+                            await intent.launch();
+                          },
+                          icon : Icon(Icons.get_app, color: Colors.deepPurpleAccent,),
+                        ),
+                      ],
                     ),
                   ],
                 ),
