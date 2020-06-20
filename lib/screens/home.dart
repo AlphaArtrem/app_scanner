@@ -1,4 +1,5 @@
 import 'package:appscanner/common/formatting.dart';
+import 'package:appscanner/common/painter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:device_apps/device_apps.dart';
@@ -65,62 +66,67 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Size size= MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("App Scanner"),
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              !_loading ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: Text("Scan Phone For Chinese Apps.")),
-              ) : loader,
-              SizedBox(height: 20,),
-              !_loading ? Container(
-                height: 50.0,
-                child: RaisedButton(
-                  onPressed: () async{
-                    setState(() {
-                      _loading = true;
-                    });
-                    await DeviceApps.getInstalledApplications(onlyAppsWithLaunchIntent: true, includeAppIcons: true).then((apps) async{
-                      if(apps != null){
-                        List<String> knowApps = _knownApps.keys.toList();
-                        Iterable<Application> chineseApps = apps.where((app) {
-                          List<String> match = knowApps.where((appName) =>
-                              appName.toLowerCase().startsWith(app.appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', ''))).toList();
-                          return match.length > 0 ? true : false;
-                        });
-                        Navigator.of(context).pushReplacementNamed('installedApps', arguments: {'chineseApps' : chineseApps.toList(), 'knownApps' : _knownApps});
-                      }
-                      else{
-                        setState(() {
-                          _loading = false;
-                        });
-                      }
-                    });
-                  },
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-                  padding: EdgeInsets.all(0.0),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue[200]], begin: Alignment.centerLeft, end: Alignment.centerRight,),
-                        borderRadius: BorderRadius.circular(30.0)
-                    ),
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                      alignment: Alignment.center,
-                      child: Text("Scan", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
-                    ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  child: CustomPaint(
+                    size: Size(size.width, size.height),
+                    painter: TopPainter(Colors.purple),
                   ),
                 ),
-              ) : Container(),
-            ],
+              ],
+            ),
           ),
+          !_loading ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text("Scan Phone For Chinese Apps.")),
+          ) : loader,
+          SizedBox(height: 20,),
+          !_loading ? Container(
+            height: 50.0,
+            child: RaisedButton(
+              onPressed: () async{
+                setState(() {
+                  _loading = true;
+                });
+                await DeviceApps.getInstalledApplications(onlyAppsWithLaunchIntent: true, includeAppIcons: true).then((apps) async{
+                  if(apps != null){
+                    List<String> knowApps = _knownApps.keys.toList();
+                    Iterable<Application> chineseApps = apps.where((app) {
+                      List<String> match = knowApps.where((appName) =>
+                          appName.toLowerCase().startsWith(app.appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', ''))).toList();
+                      return match.length > 0 ? true : false;
+                    });
+                    Navigator.of(context).pushReplacementNamed('installedApps', arguments: {'chineseApps' : chineseApps.toList(), 'knownApps' : _knownApps});
+                  }
+                  else{
+                    setState(() {
+                      _loading = false;
+                    });
+                  }
+                });
+              },
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+              padding: EdgeInsets.all(0.0),
+              child: Ink(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue[200]], begin: Alignment.centerLeft, end: Alignment.centerRight,),
+                    borderRadius: BorderRadius.circular(30.0)
+                ),
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                  alignment: Alignment.center,
+                  child: Text("Scan", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
+                ),
+              ),
+            ),
+          ) : Container(),
+        ],
       ),
     );
   }
