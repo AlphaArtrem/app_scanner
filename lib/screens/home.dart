@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Size size= MediaQuery.of(context).size;
     return Scaffold(
-      body: Stack(
+      body: !_loading ? Stack(
         children: <Widget>[
           Container(
             child: CustomPaint(
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
           ),
           Container(
             margin: EdgeInsets.fromLTRB(size.width * 0.05, size.height * 0.5, size.width * 0.05, size.height * 0.01),
-            child: !_loading ? Padding(
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
                   child: Text(
@@ -97,12 +97,12 @@ class _HomeState extends State<Home> {
                     ),
                   ),
               ),
-            ) : loader,
+            ),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(size.width * 0.05, size.height * 0.68, size.width * 0.05, size.height * 0.01),
             child: Center(
-              child: !_loading ? Container(
+              child: Container(
                 height: 50.0,
                 child: RaisedButton(
                   onPressed: () async{
@@ -140,11 +140,11 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-              ) : Container(),
+              ),
             ),
           )
         ],
-      ),
+      ) : LoadingScreen(),
     );
   }
 }
