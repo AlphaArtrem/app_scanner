@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
           Container(
             margin: EdgeInsets.fromLTRB(size.width * 0.1, size.height * 0.05, size.width * 0.05, size.height * 0.01),
             child: Image(
-              image: AssetImage('assets/detective-sm.png'),
+              image: AssetImage('assets/img/detective-lg.png'),
             ),
           ),
           Container(
@@ -91,7 +91,8 @@ class _HomeState extends State<Home> {
                     "Click on \"Scan Now\" to secure your phone from unwanted applications",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Quicksand',
+                      fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
@@ -135,7 +136,7 @@ class _HomeState extends State<Home> {
                     child: Container(
                       constraints: BoxConstraints(maxWidth: 250.0, minHeight: 50.0),
                       alignment: Alignment.center,
-                      child: Text("Scan Now", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
+                      child: Text("Scan Now", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Quicksand', fontWeight: FontWeight.bold),),
                     ),
                   ),
                 ),
