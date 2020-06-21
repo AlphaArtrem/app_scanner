@@ -68,64 +68,80 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Size size= MediaQuery.of(context).size;
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          Expanded(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  child: CustomPaint(
-                    size: Size(size.width, size.height),
-                    painter: TopPainter(Colors.purple),
-                  ),
-                ),
-              ],
+          Container(
+            child: CustomPaint(
+              size: Size(size.width, size.height),
+              painter: TopPainter([Colors.purpleAccent[200], Colors.deepPurpleAccent[400]], [0.25, 1]),
             ),
           ),
-          !_loading ? Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(child: Text("Scan Phone For Chinese Apps.")),
-          ) : loader,
-          SizedBox(height: 20,),
-          !_loading ? Container(
-            height: 50.0,
-            child: RaisedButton(
-              onPressed: () async{
-                setState(() {
-                  _loading = true;
-                });
-                await DeviceApps.getInstalledApplications(onlyAppsWithLaunchIntent: true, includeAppIcons: true).then((apps) async{
-                  if(apps != null){
-                    List<String> knowApps = _knownApps.keys.toList();
-                    Iterable<Application> chineseApps = apps.where((app) {
-                      List<String> match = knowApps.where((appName) =>
-                          appName.toLowerCase().startsWith(app.appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', ''))).toList();
-                      return match.length > 0 ? true : false;
-                    });
-                    Navigator.of(context).pushReplacementNamed('installedApps', arguments: {'chineseApps' : chineseApps.toList(), 'knownApps' : _knownApps});
-                  }
-                  else{
-                    setState(() {
-                      _loading = false;
-                    });
-                  }
-                });
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-              padding: EdgeInsets.all(0.0),
-              child: Ink(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue[200]], begin: Alignment.centerLeft, end: Alignment.centerRight,),
-                    borderRadius: BorderRadius.circular(30.0)
-                ),
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                  alignment: Alignment.center,
-                  child: Text("Scan", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
-                ),
-              ),
+          Container(
+            margin: EdgeInsets.fromLTRB(size.width * 0.1, size.height * 0.05, size.width * 0.05, size.height * 0.01),
+            child: Image(
+              image: AssetImage('assets/detective-sm.png'),
             ),
-          ) : Container(),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(size.width * 0.05, size.height * 0.5, size.width * 0.05, size.height * 0.01),
+            child: !_loading ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                  child: Text(
+                    "Click on \"Scan Now\" to secure your phone from unwanted applications",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
+                  ),
+              ),
+            ) : loader,
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(size.width * 0.05, size.height * 0.68, size.width * 0.05, size.height * 0.01),
+            child: Center(
+              child: !_loading ? Container(
+                height: 50.0,
+                child: RaisedButton(
+                  onPressed: () async{
+                    setState(() {
+                      _loading = true;
+                    });
+                    await DeviceApps.getInstalledApplications(onlyAppsWithLaunchIntent: true, includeAppIcons: true).then((apps) async{
+                      if(apps != null){
+                        List<String> knowApps = _knownApps.keys.toList();
+                        Iterable<Application> chineseApps = apps.where((app) {
+                          List<String> match = knowApps.where((appName) =>
+                              appName.toLowerCase().startsWith(app.appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', ''))).toList();
+                          return match.length > 0 ? true : false;
+                        });
+                        Navigator.of(context).pushReplacementNamed('installedApps', arguments: {'chineseApps' : chineseApps.toList(), 'knownApps' : _knownApps});
+                      }
+                      else{
+                        setState(() {
+                          _loading = false;
+                        });
+                      }
+                    });
+                  },
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                  padding: EdgeInsets.all(0.0),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [Colors.purpleAccent, Colors.purple[400]], begin: Alignment.topLeft, end: Alignment.bottomRight,),
+                        borderRadius: BorderRadius.circular(30.0)
+                    ),
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 250.0, minHeight: 50.0),
+                      alignment: Alignment.center,
+                      child: Text("Scan Now", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20),),
+                    ),
+                  ),
+                ),
+              ) : Container(),
+            ),
+          )
         ],
       ),
     );
