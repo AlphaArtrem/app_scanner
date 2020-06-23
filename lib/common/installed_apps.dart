@@ -1,11 +1,13 @@
 import 'dart:async';
-
 import 'package:android_intent/android_intent.dart';
 import 'package:appscanner/common/painter.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:native_screenshot/native_screenshot.dart';
+import 'package:flutter_share/flutter_share.dart';
 
 class InstalledApps extends StatefulWidget {
   @override
@@ -14,16 +16,21 @@ class InstalledApps extends StatefulWidget {
 
 class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserver{
   static const platform = const MethodChannel('com.alphaartrem.appscanner/deleteApp');
-  List _apps;
-  Map _knownApps;
-  List<bool> _showAlternatives = [];
+
   List<TopPainter> _painters = [
     TopPainter([Colors.redAccent[700], Colors.redAccent, Colors.red[50]],  [0.1, 0.25, 1]),
     TopPainter([Colors.lightGreenAccent, Colors.green],  [0.2, 1])
   ];
+
+  List _apps;
+  Map _knownApps;
+  String directory;
   int _appCount;
-  List _uninstalledApps = [];
   int _currentAppIndex;
+
+  List _uninstalledApps = [];
+  bool _loading = false;
+  List<bool> _showAlternatives = [];
 
   @override
   void initState() {
@@ -55,20 +62,38 @@ class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserv
               ),
             ),
             Container(
-              margin: EdgeInsets.fromLTRB(size.width * 0.1, size.height * 0.05, size.width * 0.05, size.height * 0.01),
-              child: Image(
-                image: AssetImage('assets/img/detective-lg.png'),
+              margin: EdgeInsets.fromLTRB(size.width * 0.1, size.height * 0.04, size.width * 0.05, size.height * 0.01),
+              child: Image.asset(
+                  'assets/img/detective-lg.png',
+                  height: size.height * 0.45,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(size.width * 0.8, size.height * 0.06, size.width * 0.05, size.height * 0.01),
+              child: IconButton(
+                onPressed: () async{
+                  String path = await NativeScreenshot.takeScreenshot();
+                  print(path);
+                  await FlutterShare.shareFile(
+                    title: 'Protect Your Phone And Country From Chinese Apps',
+                    text: 'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
+                        'If you want to protect your phone and privcay like me try the app by clicking the link below.\n'
+                        'https://play.google.com/store/apps/details?id=com.alphaartrem.appscanner',
+                    filePath: path,
+                  );
+                },
+                icon: Icon(Icons.share, color: Colors.white,),
               ),
             ),
             _appCount == 0 ? Container(
-              margin: EdgeInsets.fromLTRB(size.width * 0.27, size.height * 0.4, size.width * 0.05, size.height * 0.01),
+              margin: EdgeInsets.fromLTRB(size.width * 0.28, size.height * 0.4, size.width * 0.05, size.height * 0.01),
               child: Text(
                 'Your Device Is Safe',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Quicksand', color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ) : Container(),
-            Container(
+            !_loading ? Container(
               margin: EdgeInsets.fromLTRB(size.width * 0.05, size.height * 0.56, size.width * 0.05, size.height * 0.01),
               child: ListView.builder(
                 itemCount: _apps.length,
@@ -87,12 +112,15 @@ class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserv
                               SizedBox(width: 10,),
                               Expanded(
                                 flex: 9,
-                                child: Text('${_apps[index].appName}${_uninstalledApps.contains(_apps[index]) ? ' has been uninstalled' : ''}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Quicksand',),),
+                                child: Text(
+                                  '${_apps[index].appName}${_uninstalledApps.contains(_apps[index]) ? ' has been uninstalled' : ''}',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Quicksand',),
+                                ),
                               ),
                               !_showAlternatives[index] ? Column(
                                 children: <Widget>[
-                                  InkWell(
-                                    onTap: (){
+                                  GestureDetector(
+                                    onTap: () {
                                       setState(() {
                                         _showAlternatives[index] = true;
                                       });
@@ -109,7 +137,7 @@ class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserv
                               SizedBox(width: 20,),
                               !_uninstalledApps.contains(_apps[index]) ? Column(
                                 children: <Widget>[
-                                  InkWell(
+                                  GestureDetector(
                                     onTap: () async{
                                       _currentAppIndex = index;
                                       await _deleteApp(index);
@@ -144,7 +172,7 @@ class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserv
                               ),
                               Column(
                                 children: <Widget>[
-                                  InkWell(
+                                  GestureDetector(
                                     onTap: () async{
                                       AndroidIntent intent = AndroidIntent(
                                           action: 'action_view',
@@ -164,7 +192,7 @@ class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserv
                               SizedBox(width: 20,),
                               Column(
                                 children: <Widget>[
-                                  InkWell(
+                                  GestureDetector(
                                     onTap: () {
                                       setState(() {
                                         _showAlternatives[index] = false;
@@ -188,7 +216,12 @@ class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserv
                   );
                 },
               ),
-            ),
+            ) :  Container(
+                margin: EdgeInsets.fromLTRB(size.width * 0.09, size.height * 0.5, size.width * 0.05, size.height * 0.01),
+                child: SpinKitDoubleBounce(
+                color:  _appCount > 0 ? Colors.red : Colors.green,
+                size: 50.0,
+            )),
           ],
         ),
       ),
@@ -209,24 +242,32 @@ class _InstalledAppsState extends State<InstalledApps> with WidgetsBindingObserv
     switch (state) {
       case AppLifecycleState.resumed:
       case AppLifecycleState.paused:
+        if(_currentAppIndex != null){
+          setState(() {
+            _loading = true;
+          });
+        }
         Timer(Duration(seconds: 5), () async{
           if(_currentAppIndex != null){
             await DeviceApps.getInstalledApplications(onlyAppsWithLaunchIntent: true, includeAppIcons: true).then((List apps){
               if(apps != null){
                 dynamic match = apps.firstWhere((app) => app.packageName == _apps[_currentAppIndex].packageName, orElse: () => null);
-                print(match);
                 if(match == null){
                   if(!_uninstalledApps.contains(_apps[_currentAppIndex])){
                     _appCount--;
                     _uninstalledApps.add(_apps[_currentAppIndex]);
-                    setState(() {});
                   }
                 }
+                _loading = false;
+                _currentAppIndex = null;
+                setState(() {});
               }
             });
           }
         });
         break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
     }
   }
 }

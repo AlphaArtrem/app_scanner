@@ -9,6 +9,7 @@ class TopPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+
     var paint = Paint();
     paint.style = PaintingStyle.fill;
 

@@ -62,6 +62,8 @@ class _HomeState extends State<Home> {
     'kwai': ['Triller', 'https://play.google.com/store/apps/details?id=co.triller.droid'],
     'shein': ['Myntra', 'https://play.google.com/store/apps/details?id=com.myntra.android'],
     'romwe': ['Myntra', 'https://play.google.com/store/apps/details?id=com.myntra.android'],
+    'wpsoffice': ['Microsoft Office', 'https://play.google.com/store/apps/details?id=com.microsoft.office.officehubrow&hl=en_IN'],
+    'zoom' : ['Google Meet', 'https://play.google.com/store/apps/details?id=com.google.android.apps.meetings&hl=en_IN']
   };
 
   @override
