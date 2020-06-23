@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:native_screenshot/native_screenshot.dart';
 import 'package:flutter_share/flutter_share.dart';
 import '../Services/Analytics.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class InstalledApps extends StatefulWidget {
   @override
@@ -39,8 +40,31 @@ class _InstalledAppsState extends State<InstalledApps>
   @override
   void initState() {
     super.initState();
+    this.initDynamicLinks();
     WidgetsBinding.instance.addObserver(this);
     Analytics().logEvent(page: "InstalledPage");
+  }
+
+  void initDynamicLinks() async {
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      Navigator.pushNamed(context, deepLink.path);
+    }
+
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+
+      if (deepLink != null) {
+        Navigator.pushNamed(context, deepLink.path);
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
   }
 
   @override
@@ -87,7 +111,7 @@ class _InstalledAppsState extends State<InstalledApps>
                     text:
                         'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
                         'If you want to protect your phone and privcay like me try the app by clicking the link below.\n'
-                        'https://play.google.com/store/apps/details?id=com.alphaartrem.appscanner',
+                        'https://riplace.page.link/app',
                     filePath: path,
                   );
                 },
