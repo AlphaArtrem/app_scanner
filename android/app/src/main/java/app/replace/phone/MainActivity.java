@@ -1,4 +1,4 @@
-package com.alphaartrem.appscanner;
+package app.replace.phone.cleaner;
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;
