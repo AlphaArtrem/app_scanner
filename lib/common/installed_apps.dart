@@ -82,282 +82,349 @@ class _InstalledAppsState extends State<InstalledApps>
     return Scaffold(
       body: Container(
         color: Colors.white,
-        child: Stack(
+        child: Column(
           children: <Widget>[
-            Container(
-              child: CustomPaint(
-                size: Size(size.width, size.height),
-                painter: _appCount > 0 ? _painters[0] : _painters[1],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(size.width * 0.1, size.height * 0.04,
-                  size.width * 0.05, size.height * 0.01),
-              child: Image.asset(
-                'assets/img/detective-lg.png',
-                height: size.height * 0.45,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(size.width * 0.8, size.height * 0.06,
-                  size.width * 0.05, size.height * 0.01),
-              child: IconButton(
-                onPressed: () async {
-                  Analytics().share();
-                  String path = await NativeScreenshot.takeScreenshot();
-                  print(path);
-                  await FlutterShare.shareFile(
-                    title: 'Protect Your Phone And Country From Chinese Apps',
-                    text:
-                        'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
-                        'If you want to protect your phone and privcay like me try the app by clicking the link below.\n'
-                        'https://riplace.page.link/app',
-                    filePath: path,
-                  );
-                },
-                icon: Icon(
-                  Icons.share,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            _appCount == 0
-                ? Container(
-                    margin: EdgeInsets.fromLTRB(
-                        size.width * 0.28,
-                        size.height * 0.4,
-                        size.width * 0.05,
-                        size.height * 0.01),
-                    child: Text(
-                      'Your Device Is Safe',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Quicksand',
-                          color: Colors.white),
-                      textAlign: TextAlign.center,
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    child: CustomPaint(
+                      size: Size(size.width, size.height),
+                      painter: _appCount > 0 ? _painters[0] : _painters[1],
                     ),
-                  )
-                : Container(),
-            !_loading
-                ? Container(
-                    margin: EdgeInsets.fromLTRB(
-                        size.width * 0.05,
-                        size.height * 0.56,
-                        size.width * 0.05,
-                        size.height * 0.01),
-                    child: ListView.builder(
-                      itemCount: _apps.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                        flex: 4,
-                                        child: Image.memory(
-                                          _apps[index].icon,
-                                          scale: 2,
-                                        )),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      flex: 9,
-                                      child: Text(
-                                        '${_apps[index].appName}${_uninstalledApps.contains(_apps[index]) ? ' has been uninstalled' : ''}',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Quicksand',
-                                        ),
-                                      ),
-                                    ),
-                                    !_showAlternatives[index]
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              Analytics().CheckReplacableApp(
-                                                  PackageName:
-                                                      _apps[index].packageName);
-                                              setState(() {
-                                                _showAlternatives[index] = true;
-                                              });
-                                            },
-                                            child: Column(
-                                              children: <Widget>[
-                                                Image.asset(
-                                                  'assets/img/alternative-lg.png',
-                                                  height: size.width * 0.05,
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  "View\nAlternative",
-                                                  style: TextStyle(
-                                                      fontFamily: 'Quicksand',
-                                                      fontSize: 8),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : Container(),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    !_uninstalledApps.contains(_apps[index])
-                                        ? GestureDetector(
-                                            onTap: () async {
-                                              Analytics().Uninstalled(
-                                                packageName:
-                                                    _apps[index].packageName,
-                                              );
-                                              _currentAppIndex = index;
-                                              await _deleteApp(index);
-                                            },
-                                            child: Column(
-                                              children: <Widget>[
-                                                Image.asset(
-                                                  'assets/img/uninstall-lg.png',
-                                                  height: size.height * 0.03,
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  "Uninstall",
-                                                  style: TextStyle(
-                                                      fontFamily: 'Quicksand',
-                                                      fontSize: 8),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : Container(),
-                                  ],
-                                ),
-                                _showAlternatives[index]
-                                    ? SizedBox(
-                                        height: 10,
-                                      )
-                                    : Container(),
-                                _showAlternatives[index]
-                                    ? Row(
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(size.width * 0.1, size.height * 0.04,
+                        size.width * 0.05, size.height * 0.01),
+                    child: Image.asset(
+                      'assets/img/detective-lg.png',
+                      height: size.height * 0.45,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(size.width * 0.8, size.height * 0.06,
+                        size.width * 0.05, size.height * 0.01),
+                    child: IconButton(
+                      onPressed: () async {
+                        Analytics().share();
+                        String path = await NativeScreenshot.takeScreenshot();
+                        print(path);
+                        await FlutterShare.shareFile(
+                          title: 'Protect Your Phone And Country From Chinese Apps',
+                          text:
+                              'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
+                              'If you want to protect your phone and privcay like me try the app by clicking the link below.\n'
+                              'https://riplace.page.link/app',
+                          filePath: path,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.share,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  _appCount == 0
+                      ? Container(
+                          margin: EdgeInsets.fromLTRB(
+                              size.width * 0.275,
+                              size.height * 0.4,
+                              size.width * 0.05,
+                              size.height * 0.01),
+                          child: Text(
+                            'Your Device Is Safe',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Quicksand',
+                                color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Container(),
+                  !_loading
+                      ? Container(
+                          margin: EdgeInsets.fromLTRB(
+                              size.width * 0.05,
+                              size.height * 0.58,
+                              size.width * 0.05,
+                              size.height * 0.01),
+                          child: ListView.builder(
+                            itemCount: _apps.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
                                         children: <Widget>[
                                           Expanded(
-                                            flex: 5,
-                                            child: Image.asset(
-                                              'assets/img/google_play.png',
-                                            ),
-                                          ),
+                                              flex: 4,
+                                              child: Image.memory(
+                                                _apps[index].icon,
+                                                scale: 2,
+                                              )),
                                           SizedBox(
                                             width: 10,
                                           ),
                                           Expanded(
                                             flex: 9,
                                             child: Text(
-                                              '${_knownApps[_apps[index].appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', '')][0]}',
+                                              '${_apps[index].appName}${_uninstalledApps.contains(_apps[index]) ? ' has been uninstalled' : ''}',
                                               style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'Quicksand'),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Quicksand',
+                                              ),
                                             ),
                                           ),
-                                          Column(
-                                            children: <Widget>[
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  Analytics().Install(
-                                                      packageName: _apps[index]
-                                                          .packageName);
-                                                  AndroidIntent intent =
-                                                      AndroidIntent(
-                                                          action: 'action_view',
-                                                          data: _knownApps[
-                                                              _apps[index]
-                                                                  .appName
-                                                                  .toLowerCase()
-                                                                  .replaceAll(
-                                                                      ' ', '')
-                                                                  .replaceAll(
-                                                                      ':', '')
-                                                                  .replaceAll(
-                                                                      '-',
-                                                                      '')][1]);
-                                                  await intent.launch();
-                                                },
-                                                child: Image.asset(
-                                                  'assets/img/alternative-lg.png',
-                                                  height: size.width * 0.05,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                "Install Now",
-                                                style: TextStyle(
-                                                    fontFamily: 'Quicksand',
-                                                    fontSize: 8),
-                                              ),
-                                            ],
-                                          ),
+                                          !_showAlternatives[index]
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Analytics().CheckReplacableApp(
+                                                        PackageName:
+                                                            _apps[index].packageName);
+                                                    setState(() {
+                                                      _showAlternatives[index] = true;
+                                                    });
+                                                  },
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Image.asset(
+                                                        'assets/img/alternative-lg.png',
+                                                        height: size.width * 0.063,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        "Replace",
+                                                        style: TextStyle(
+                                                            fontFamily: 'Quicksand',
+                                                            fontSize: 10,
+                                                            fontWeight: FontWeight.w600,
+                                                        ),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : Container(),
                                           SizedBox(
                                             width: 20,
                                           ),
-                                          Column(
-                                            children: <Widget>[
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Analytics().Hide();
-                                                  setState(() {
-                                                    _showAlternatives[index] =
-                                                        false;
-                                                  });
-                                                },
-                                                child: Image.asset(
-                                                  'assets/img/close-lg.png',
-                                                  height: size.width * 0.05,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                "Hide",
-                                                style: TextStyle(
-                                                    fontFamily: 'Quicksand',
-                                                    fontSize: 8),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
+                                          !_uninstalledApps.contains(_apps[index])
+                                              ? GestureDetector(
+                                                  onTap: () async {
+                                                    Analytics().Uninstalled(
+                                                      packageName:
+                                                          _apps[index].packageName,
+                                                    );
+                                                    _currentAppIndex = index;
+                                                    await _deleteApp(index);
+                                                  },
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Image.asset(
+                                                        'assets/img/uninstall-lg.png',
+                                                        height: size.height * 0.03,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        "Uninstall",
+                                                        style: TextStyle(
+                                                            fontFamily: 'Quicksand',
+                                                            fontSize: 10,
+                                                            fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : Container(),
                                         ],
-                                      )
-                                    : Container(),
-                              ],
-                            ),
+                                      ),
+                                      _showAlternatives[index]
+                                          ? SizedBox(
+                                              height: 10,
+                                            )
+                                          : Container(),
+                                      _showAlternatives[index]
+                                          ? Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  flex: 5,
+                                                  child: Image.asset(
+                                                    'assets/img/google_play.png',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  flex: 9,
+                                                  child: Text(
+                                                    '${_knownApps[_apps[index].appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', '')][0]}',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontFamily: 'Quicksand'),
+                                                  ),
+                                                ),
+                                                Column(
+                                                  children: <Widget>[
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        Analytics().Install(
+                                                            packageName: _apps[index]
+                                                                .packageName);
+                                                        AndroidIntent intent =
+                                                            AndroidIntent(
+                                                                action: 'action_view',
+                                                                data: _knownApps[
+                                                                    _apps[index]
+                                                                        .appName
+                                                                        .toLowerCase()
+                                                                        .replaceAll(
+                                                                            ' ', '')
+                                                                        .replaceAll(
+                                                                            ':', '')
+                                                                        .replaceAll(
+                                                                            '-',
+                                                                            '')][1]);
+                                                        await intent.launch();
+                                                      },
+                                                      child: Image.asset(
+                                                        'assets/img/alternative-lg.png',
+                                                        height: size.width * 0.063,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      "Install",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Quicksand',
+                                                          fontSize: 10,
+                                                          fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Column(
+                                                  children: <Widget>[
+                                                    SizedBox(
+                                                      height: 2,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Analytics().Hide();
+                                                        setState(() {
+                                                          _showAlternatives[index] =
+                                                              false;
+                                                        });
+                                                      },
+                                                      child: Image.asset(
+                                                        'assets/img/close-lg.png',
+                                                        height: size.width * 0.058,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      "Hide",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Quicksand',
+                                                          fontSize: 10,
+                                                          fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                              ],
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        )
+                      : Container(
+                          margin: EdgeInsets.fromLTRB(
+                              size.width * 0.09,
+                              size.height * 0.5,
+                              size.width * 0.05,
+                              size.height * 0.01),
+                          child: SpinKitDoubleBounce(
+                            color: _appCount > 0 ? Colors.red : Colors.green,
+                            size: 50.0,
+                          )),
+                ],
+              ),
+            ),
+            /*Stack(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: _appCount > 0 ? [Colors.redAccent[700], Colors.redAccent, Colors.red[300]] : [Colors.green, Colors.lightGreenAccent[700]],
+                      stops: _appCount > 0 ? [0.2, 0.6, 1] : [0.2, 1],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  )
-                : Container(
-                    margin: EdgeInsets.fromLTRB(
-                        size.width * 0.09,
-                        size.height * 0.5,
-                        size.width * 0.05,
-                        size.height * 0.01),
-                    child: SpinKitDoubleBounce(
-                      color: _appCount > 0 ? Colors.red : Colors.green,
-                      size: 50.0,
-                    )),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      SizedBox(height: size.height * 0.068,),
+                    ],
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    width: 80,
+                    height: size.height * 0.08,
+                    child: MaterialButton(
+                      elevation: 0.0,
+                      shape: CircleBorder(side: BorderSide(width: 2, color: Colors.white, style: BorderStyle.solid)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.share, size: 25,),
+                          SizedBox(height: 5),
+                          Text(
+                            'Share',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Quicksand',
+                                color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      color: Colors.white,
+                      textColor: Colors.black,
+                      onPressed: (){},
+                    ),
+                  ),
+                ),
+              ],
+            ),*/
           ],
         ),
       ),

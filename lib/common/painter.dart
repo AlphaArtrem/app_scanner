@@ -26,8 +26,8 @@ class TopPainter extends CustomPainter {
 
     var path = Path();
 
-    path.moveTo(0, size.height * 0.4);
-    path.quadraticBezierTo(size.width * 0.8, size.height * 0.6, size.width, size.height * 0.5);
+    path.moveTo(0, size.height * 0.43);
+    path.quadraticBezierTo(size.width * 0.8, size.height * 0.63, size.width, size.height * 0.52);
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
 
