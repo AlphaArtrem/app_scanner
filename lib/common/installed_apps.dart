@@ -101,29 +101,6 @@ class _InstalledAppsState extends State<InstalledApps>
                       height: size.height * 0.45,
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(size.width * 0.8, size.height * 0.06,
-                        size.width * 0.05, size.height * 0.01),
-                    child: IconButton(
-                      onPressed: () async {
-                        Analytics().share();
-                        String path = await NativeScreenshot.takeScreenshot();
-                        print(path);
-                        await FlutterShare.shareFile(
-                          title: 'Protect Your Phone And Country From Chinese Apps',
-                          text:
-                              'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
-                              'If you want to protect your phone and privcay like me try the app by clicking the link below.\n'
-                              'https://riplace.page.link/app',
-                          filePath: path,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.share,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
                   _appCount == 0
                       ? Container(
                           margin: EdgeInsets.fromLTRB(
@@ -375,56 +352,41 @@ class _InstalledAppsState extends State<InstalledApps>
                 ],
               ),
             ),
-            /*Stack(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: _appCount > 0 ? [Colors.redAccent[700], Colors.redAccent, Colors.red[300]] : [Colors.green, Colors.lightGreenAccent[700]],
-                      stops: _appCount > 0 ? [0.2, 0.6, 1] : [0.2, 1],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      SizedBox(height: size.height * 0.068,),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Container(
-                    width: 80,
-                    height: size.height * 0.08,
-                    child: MaterialButton(
-                      elevation: 0.0,
-                      shape: CircleBorder(side: BorderSide(width: 2, color: Colors.white, style: BorderStyle.solid)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.share, size: 25,),
-                          SizedBox(height: 5),
-                          Text(
-                            'Share',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Quicksand',
-                                color: Colors.black),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: GestureDetector(
+                onTap: () async {
+                  Analytics().share();
+                  String path = await NativeScreenshot.takeScreenshot();
+                  print(path);
+                  await FlutterShare.shareFile(
+                    title: 'Protect Your Phone And Country From Chinese Apps',
+                    text:
+                    'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
+                        'If you want to protect your phone and privcay like me try the app by clicking the link below.\n'
+                        'https://riplace.page.link/app',
+                    filePath: path,
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Text(
+                      'Share This App',
+                      style: TextStyle(
+                        fontFamily: 'Quicksand',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black54,
                       ),
-                      color: Colors.white,
-                      textColor: Colors.black,
-                      onPressed: (){},
                     ),
-                  ),
+                    SizedBox(width: 10,),
+                    Icon(Icons.share, color: Colors.deepPurpleAccent,)
+                  ],
                 ),
-              ],
-            ),*/
+              ),
+            ),
           ],
         ),
       ),
