@@ -94,8 +94,11 @@ class _InstalledAppsState extends State<InstalledApps>
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(size.width * 0.1, size.height * 0.04,
-                        size.width * 0.05, size.height * 0.01),
+                    margin: EdgeInsets.fromLTRB(
+                        size.width * 0.1,
+                        size.height * 0.04,
+                        size.width * 0.05,
+                        size.height * 0.01),
                     child: Image.asset(
                       'assets/img/detective-lg.png',
                       height: size.height * 0.45,
@@ -159,18 +162,22 @@ class _InstalledAppsState extends State<InstalledApps>
                                           !_showAlternatives[index]
                                               ? GestureDetector(
                                                   onTap: () {
-                                                    Analytics().CheckReplacableApp(
-                                                        PackageName:
-                                                            _apps[index].packageName);
+                                                    Analytics()
+                                                        .CheckReplacableApp(
+                                                            PackageName: _apps[
+                                                                    index]
+                                                                .packageName);
                                                     setState(() {
-                                                      _showAlternatives[index] = true;
+                                                      _showAlternatives[index] =
+                                                          true;
                                                     });
                                                   },
                                                   child: Column(
                                                     children: <Widget>[
                                                       Image.asset(
                                                         'assets/img/alternative-lg.png',
-                                                        height: size.width * 0.063,
+                                                        height:
+                                                            size.width * 0.063,
                                                       ),
                                                       SizedBox(
                                                         height: 5,
@@ -178,11 +185,14 @@ class _InstalledAppsState extends State<InstalledApps>
                                                       Text(
                                                         "Replace",
                                                         style: TextStyle(
-                                                            fontFamily: 'Quicksand',
-                                                            fontSize: 10,
-                                                            fontWeight: FontWeight.w600,
+                                                          fontFamily:
+                                                              'Quicksand',
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w600,
                                                         ),
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                     ],
                                                   ),
@@ -191,12 +201,13 @@ class _InstalledAppsState extends State<InstalledApps>
                                           SizedBox(
                                             width: 20,
                                           ),
-                                          !_uninstalledApps.contains(_apps[index])
+                                          !_uninstalledApps
+                                                  .contains(_apps[index])
                                               ? GestureDetector(
                                                   onTap: () async {
                                                     Analytics().Uninstalled(
-                                                      packageName:
-                                                          _apps[index].packageName,
+                                                      packageName: _apps[index]
+                                                          .packageName,
                                                     );
                                                     _currentAppIndex = index;
                                                     await _deleteApp(index);
@@ -205,7 +216,8 @@ class _InstalledAppsState extends State<InstalledApps>
                                                     children: <Widget>[
                                                       Image.asset(
                                                         'assets/img/uninstall-lg.png',
-                                                        height: size.height * 0.03,
+                                                        height:
+                                                            size.height * 0.03,
                                                       ),
                                                       SizedBox(
                                                         height: 5,
@@ -213,9 +225,11 @@ class _InstalledAppsState extends State<InstalledApps>
                                                       Text(
                                                         "Uninstall",
                                                         style: TextStyle(
-                                                            fontFamily: 'Quicksand',
-                                                            fontSize: 10,
-                                                            fontWeight: FontWeight.w600,
+                                                          fontFamily:
+                                                              'Quicksand',
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w600,
                                                         ),
                                                       ),
                                                     ],
@@ -247,8 +261,10 @@ class _InstalledAppsState extends State<InstalledApps>
                                                     '${_knownApps[_apps[index].appName.toLowerCase().replaceAll(' ', '').replaceAll(':', '').replaceAll('-', '')][0]}',
                                                     style: TextStyle(
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'Quicksand'),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'Quicksand'),
                                                   ),
                                                 ),
                                                 Column(
@@ -256,27 +272,30 @@ class _InstalledAppsState extends State<InstalledApps>
                                                     GestureDetector(
                                                       onTap: () async {
                                                         Analytics().Install(
-                                                            packageName: _apps[index]
+                                                            packageName: _apps[
+                                                                    index]
                                                                 .packageName);
                                                         AndroidIntent intent =
                                                             AndroidIntent(
-                                                                action: 'action_view',
-                                                                data: _knownApps[
-                                                                    _apps[index]
-                                                                        .appName
-                                                                        .toLowerCase()
-                                                                        .replaceAll(
-                                                                            ' ', '')
-                                                                        .replaceAll(
-                                                                            ':', '')
-                                                                        .replaceAll(
-                                                                            '-',
-                                                                            '')][1]);
+                                                                action:
+                                                                    'action_view',
+                                                                data: _knownApps[_apps[
+                                                                        index]
+                                                                    .appName
+                                                                    .toLowerCase()
+                                                                    .replaceAll(
+                                                                        ' ', '')
+                                                                    .replaceAll(
+                                                                        ':', '')
+                                                                    .replaceAll(
+                                                                        '-',
+                                                                        '')][1]);
                                                         await intent.launch();
                                                       },
                                                       child: Image.asset(
                                                         'assets/img/alternative-lg.png',
-                                                        height: size.width * 0.063,
+                                                        height:
+                                                            size.width * 0.063,
                                                       ),
                                                     ),
                                                     SizedBox(
@@ -285,9 +304,10 @@ class _InstalledAppsState extends State<InstalledApps>
                                                     Text(
                                                       "Install",
                                                       style: TextStyle(
-                                                          fontFamily: 'Quicksand',
-                                                          fontSize: 10,
-                                                          fontWeight: FontWeight.w600,
+                                                        fontFamily: 'Quicksand',
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
                                                     ),
                                                   ],
@@ -304,13 +324,14 @@ class _InstalledAppsState extends State<InstalledApps>
                                                       onTap: () {
                                                         Analytics().Hide();
                                                         setState(() {
-                                                          _showAlternatives[index] =
-                                                              false;
+                                                          _showAlternatives[
+                                                              index] = false;
                                                         });
                                                       },
                                                       child: Image.asset(
                                                         'assets/img/close-lg.png',
-                                                        height: size.width * 0.058,
+                                                        height:
+                                                            size.width * 0.058,
                                                       ),
                                                     ),
                                                     SizedBox(
@@ -319,9 +340,10 @@ class _InstalledAppsState extends State<InstalledApps>
                                                     Text(
                                                       "Hide",
                                                       style: TextStyle(
-                                                          fontFamily: 'Quicksand',
-                                                          fontSize: 10,
-                                                          fontWeight: FontWeight.w600,
+                                                        fontFamily: 'Quicksand',
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
                                                     ),
                                                   ],
@@ -362,28 +384,46 @@ class _InstalledAppsState extends State<InstalledApps>
                   await FlutterShare.shareFile(
                     title: 'Protect Your Phone And Country From Chinese Apps',
                     text:
-                    'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
+                        'Hey, I am using App Scanner to get rid of malicious chinese apps which snoop on our privacy and harm our phones. '
                         'If you want to protect your phone and privcay like me try the app by clicking the link below.\n'
                         'https://riplace.page.link/app',
                     filePath: path,
                   );
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Text(
-                      'Share This App',
-                      style: TextStyle(
-                        fontFamily: 'Quicksand',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black54,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Text(
+                        'Share This App',
+                        style: TextStyle(
+                          fontFamily: 'Quicksand',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black54,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10,),
-                    Icon(Icons.share, color: Colors.deepPurpleAccent,)
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      ShaderMask(
+                        blendMode: BlendMode.srcATop,
+                        shaderCallback: (Rect bounds) {
+                          return RadialGradient(
+                            center: Alignment.center,
+                            radius: 1.0,
+                            colors: [Colors.purpleAccent, Colors.purple[400]],
+                            tileMode: TileMode.repeated,
+                          ).createShader(bounds);
+                        },
+                        child: Icon(
+                          Icons.share,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
