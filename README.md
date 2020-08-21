@@ -42,7 +42,8 @@ firebase_dynamic_links  : ^0.5.1
 
 ## Screenshots
 
-![Home](/img/home.jpg)
-![Home](/img/loading.jpg)
-![Home](/img/apps.jpg)
-![Home](/img/alternatives.jpg)
+![Home](/img/1.gif)
+![Home](/img/2.gif)
+![Home](/img/3.gif)
+![Home](/img/4.gif)
+![Home](/img/5.gif)
